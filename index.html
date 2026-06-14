@@ -103,12 +103,12 @@
     }
 
     @keyframes beat {
-      0%, 100% { 
-        transform: scale(1); 
+      0%, 100% {
+        transform: scale(1);
       }
 
-      50% { 
-        transform: scale(1.15); 
+      50% {
+        transform: scale(1.15);
       }
     }
 
@@ -285,9 +285,9 @@
       <h2>เข้าสู่พื้นที่ความรัก 💖</h2>
       <p>กรอกรหัสผ่านก่อนเข้าเว็บไซต์</p>
 
-      <input 
-        type="password" 
-        id="passwordInput" 
+      <input
+        type="password"
+        id="passwordInput"
         placeholder="กรอกรหัสผ่าน"
         onkeydown="checkEnter(event)"
       >
@@ -324,9 +324,10 @@
     </div>
 
     <div class="section-box">
-      <div class="section-title">กำหนดคะแนนเอง</div>
-      <input type="number" id="customScore" placeholder="เช่น 150" />
-      <button class="set-score-btn" onclick="setCustomScore()">บันทึกคะแนนใหม่</button>
+      <div class="section-title">เพิ่ม / หักคะแนนเอง</div>
+      <input type="number" id="customScore" placeholder="เช่น 20 หรือ -15" />
+      <input type="text" id="customReason" placeholder="เหตุผล เช่น ให้คะแนนพิเศษ / หักเพราะตอบช้า" />
+      <button class="set-score-btn" onclick="setCustomScore()">บันทึกการเพิ่ม / หักคะแนน</button>
     </div>
 
     <button class="reset" onclick="resetData()">รีเซ็ตคะแนนและประวัติทั้งหมด</button>
@@ -358,6 +359,7 @@
 
     // ==============================
     // ตั้งค่ารหัสผ่านเข้าเว็บ
+    // แก้รหัสผ่านตรงนี้ได้เลย
     // ==============================
     const WEBSITE_PASSWORD = "love1234";
 
@@ -400,16 +402,15 @@
     checkLoginStatus();
 
     // ==============================
-    // ตั้งค่า Firebase
-    // เอา firebaseConfig ของตัวเองมาใส่ตรงนี้
+    // Firebase Config ของคุณ
     // ==============================
     const firebaseConfig = {
       apiKey: "AIzaSyA9xagrdvzVAedix69Xj2Ym2960vZZBbfE",
-  authDomain: "love-score-5ef60.firebaseapp.com",
-  projectId: "love-score-5ef60",
-  storageBucket: "love-score-5ef60.firebasestorage.app",
-  messagingSenderId: "953417297034",
-  appId: "1:953417297034:web:764b8ca9f240b3aab7d173"
+      authDomain: "love-score-5ef60.firebaseapp.com",
+      projectId: "love-score-5ef60",
+      storageBucket: "love-score-5ef60.firebasestorage.app",
+      messagingSenderId: "953417297034",
+      appId: "1:953417297034:web:764b8ca9f240b3aab7d173"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -422,6 +423,7 @@
     const statusEl = document.getElementById("status");
     const reasonEl = document.getElementById("reason");
     const customScoreEl = document.getElementById("customScore");
+    const customReasonEl = document.getElementById("customReason");
     const historyList = document.getElementById("historyList");
 
     let currentScore = 100;
@@ -548,17 +550,31 @@
     };
 
     window.setCustomScore = async function() {
-      const newScore = Number(customScoreEl.value);
+      const point = Number(customScoreEl.value);
+      const customReason = customReasonEl.value.trim();
 
-      if (customScoreEl.value.trim() === "" || isNaN(newScore)) {
-        alert("กรุณากรอกคะแนนเป็นตัวเลข");
+      if (customScoreEl.value.trim() === "" || isNaN(point)) {
+        alert("กรุณากรอกคะแนนเป็นตัวเลข เช่น 20 หรือ -15");
         return;
       }
 
-      const oldScore = currentScore;
-      const diff = newScore - oldScore;
+      if (point === 0) {
+        alert("กรุณากรอกคะแนนที่ไม่ใช่ 0");
+        return;
+      }
 
-      const confirmSet = confirm(`ต้องการเปลี่ยนคะแนนจาก ${oldScore} เป็น ${newScore} ใช่ไหม?`);
+      if (customReason === "") {
+        alert("กรุณาใส่เหตุผลก่อนนะ");
+        return;
+      }
+
+      const newScore = currentScore + point;
+
+      const confirmSet = confirm(
+        `ต้องการ ${point > 0 ? "เพิ่ม" : "หัก"} ${Math.abs(point)} คะแนน ใช่ไหม?\n\n` +
+        `คะแนนปัจจุบัน: ${currentScore}\n` +
+        `คะแนนหลังบันทึก: ${newScore}`
+      );
 
       if (!confirmSet) return;
 
@@ -570,15 +586,16 @@
       });
 
       await addDoc(historyRef, {
-        point: diff,
-        reason: `กำหนดคะแนนเองจาก ${oldScore} เป็น ${newScore}`,
+        point: point,
+        reason: customReason,
         date: dateText,
-        type: "set_score",
+        type: "custom_point",
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
       });
 
       customScoreEl.value = "";
+      customReasonEl.value = "";
     };
 
     window.editHistory = async function(id, oldPoint, oldReason) {
