@@ -426,7 +426,7 @@
     const customReasonEl = document.getElementById("customReason");
     const historyList = document.getElementById("historyList");
 
-    let currentScore = 100;
+    let currentScore = 0;
 
     async function initScore() {
       const scoreSnap = await getDoc(scoreRef);
