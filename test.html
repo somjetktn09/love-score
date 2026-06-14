@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>คะแนนความรักของเรา - สมเจตน์</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Prompt", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffd6e8, #fff0f6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #5a1f3d;
+    }
+
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #ffd6e8, #fff0f6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      padding: 20px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 380px;
+      background: white;
+      border-radius: 25px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(255, 105, 180, 0.25);
+    }
+
+    .login-box h2 {
+      color: #ff4f9a;
+      margin-top: 0;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 13px;
+      border-radius: 15px;
+      border: 2px solid #ffc2dd;
+      outline: none;
+      font-size: 16px;
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .login-box button {
+      width: 100%;
+      background: #ff69b4;
+      color: white;
+    }
+
+    .error-text {
+      color: #d6336c;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: white;
+      border-radius: 25px;
+      padding: 25px;
+      box-shadow: 0 15px 40px rgba(255, 105, 180, 0.25);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #ff4f9a;
+      line-height: 1.4;
+    }
+
+    .heart {
+      font-size: 60px;
+      animation: beat 1s infinite;
+    }
+
+    @keyframes beat {
+      0%, 100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.15);
+      }
+    }
+
+    .score {
+      font-size: 48px;
+      font-weight: bold;
+      color: #ff2f86;
+      margin: 10px 0;
+    }
+
+    .status {
+      background: #ffe4f1;
+      padding: 12px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      line-height: 1.6;
+    }
+
+    textarea,
+    input {
+      width: 100%;
+      border: 2px solid #ffc2dd;
+      border-radius: 15px;
+      padding: 12px;
+      outline: none;
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    textarea {
+      height: 80px;
+      resize: none;
+    }
+
+    textarea:focus,
+    input:focus {
+      border-color: #ff5ca8;
+    }
+
+    button {
+      border: none;
+      padding: 12px;
+      border-radius: 15px;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .add {
+      background: #ff69b4;
+      color: white;
+    }
+
+    .minus {
+      background: #8e44ad;
+      color: white;
+    }
+
+    .set-score-btn {
+      background: #ffb6d5;
+      color: #5a1f3d;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .reset {
+      background: #f1f1f1;
+      color: #555;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .logout-btn {
+      background: #ffe4f1;
+      color: #5a1f3d;
+      width: auto;
+      padding: 8px 14px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+
+    .section-box {
+      margin-top: 18px;
+      padding: 15px;
+      background: #fff5fa;
+      border-radius: 18px;
+    }
+
+    .section-title {
+      font-weight: bold;
+      color: #ff4f9a;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    .tree-section {
+      margin: 22px 0;
+      padding: 18px;
+      background: #fff5fa;
+      border-radius: 20px;
+    }
+
+    .tree-section h3 {
+      margin-top: 0;
+      color: #ff4f9a;
+      margin-bottom: 15px;
+    }
+
+    .tree-wrapper {
+      position: relative;
+      width: 280px;
+      height: 340px;
+      margin: 0 auto;
+    }
+
+    .tree-top {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 220px;
+      height: 190px;
+      background: #d9f7be;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #b7eb8f;
+      transition: background 0.4s ease, border-color 0.4s ease, opacity 0.4s ease;
+    }
+
+    .tree-top.sad {
+      background: #e6e6e6;
+      border-color: #c9c9c9;
+      opacity: 0.85;
+    }
+
+    .tree-top.very-sad {
+      background: #d0d0d0;
+      border-color: #aaaaaa;
+      opacity: 0.75;
+    }
+
+    .tree-trunk {
+      position: absolute;
+      bottom: 45px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 42px;
+      height: 115px;
+      background: #8b5a3c;
+      border-radius: 14px;
+    }
+
+    .tree-branch {
+      position: absolute;
+      width: 72px;
+      height: 12px;
+      background: #8b5a3c;
+      border-radius: 10px;
+      top: 165px;
+    }
+
+    .tree-branch.left {
+      left: 52px;
+      transform: rotate(-28deg);
+    }
+
+    .tree-branch.right {
+      right: 52px;
+      transform: rotate(28deg);
+    }
+
+    .tree-ground {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 210px;
+      height: 30px;
+      background: #b7eb8f;
+      border-radius: 50%;
+    }
+
+    .leaf {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #52c41a;
+      border-radius: 50% 50% 50% 0;
+      opacity: 0.95;
+      animation: leafWiggle 2.5s infinite ease-in-out;
+    }
+
+    @keyframes leafWiggle {
+      0%, 100% {
+        transform: rotate(-20deg) translateY(0);
+      }
+
+      50% {
+        transform: rotate(10deg) translateY(-2px);
+      }
+    }
+
+    .flower {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #ff85c0;
+      border-radius: 50%;
+      box-shadow:
+        -10px 0 0 #ffadd2,
+        10px 0 0 #ffadd2,
+        0 -10px 0 #ffadd2,
+        0 10px 0 #ffadd2;
+      animation: popCute 1.8s infinite ease-in-out;
+    }
+
+    .fruit {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #ff7875;
+      border-radius: 50%;
+      animation: popCute 2s infinite ease-in-out;
+    }
+
+    @keyframes popCute {
+      0%, 100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.12);
+      }
+    }
+
+    .love-heart {
+      position: absolute;
+      font-size: 20px;
+      animation: heartFloat 2.8s infinite ease-in-out;
+    }
+
+    @keyframes heartFloat {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+        opacity: 0.9;
+      }
+
+      50% {
+        transform: translateY(-8px) scale(1.15);
+        opacity: 1;
+      }
+    }
+
+    .broken-branch {
+      position: absolute;
+      width: 55px;
+      height: 10px;
+      background: #8b5a3c;
+      border-radius: 8px;
+    }
+
+    .broken-branch::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      top: -2px;
+      width: 0;
+      height: 0;
+      border-left: 8px solid #8b5a3c;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+    }
+
+    .falling-leaf {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      background: #c8a45d;
+      border-radius: 50% 50% 50% 0;
+      opacity: 0.85;
+      animation: leafFall 3s infinite ease-in-out;
+    }
+
+    @keyframes leafFall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.95;
+      }
+
+      50% {
+        transform: translateY(20px) translateX(8px) rotate(90deg);
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: translateY(45px) translateX(-6px) rotate(180deg);
+        opacity: 0.45;
+      }
+    }
+
+    .tree-caption {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #b94d7c;
+      line-height: 1.6;
+    }
+
+    .history {
+      margin-top: 25px;
+      text-align: left;
+    }
+
+    .history h2 {
+      font-size: 20px;
+      color: #ff4f9a;
+    }
+
+    .item {
+      background: #fff5fa;
+      border-left: 5px solid #ff69b4;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .plus {
+      color: #ff2f86;
+      font-weight: bold;
+    }
+
+    .negative {
+      color: #8e44ad;
+      font-weight: bold;
+    }
+
+    .date {
+      color: #999;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .history-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .edit-btn {
+      background: #ffd1e6;
+      color: #5a1f3d;
+      flex: 1;
+      padding: 8px;
+      font-size: 13px;
+    }
+
+    .delete-btn {
+      background: #eeeeee;
+      color: #555;
+      flex: 1;
+      padding: 8px;
+      font-size: 13px;
+    }
+
+    .loading {
+      color: #999;
+      font-size: 14px;
+    }
+
+    .footer-love {
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 1px dashed #ffc2dd;
+      font-size: 13px;
+      color: #b94d7c;
+      line-height: 1.6;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <h2>เข้าสู่พื้นที่ความรัก 💖</h2>
+      <p>กรอกรหัสผ่านก่อนเข้าเว็บไซต์</p>
+
+      <input
+        type="password"
+        id="passwordInput"
+        placeholder="กรอกรหัสผ่าน"
+        onkeydown="checkEnter(event)"
+      >
+
+      <button onclick="checkPassword()">เข้าสู่เว็บไซต์</button>
+
+      <div class="error-text" id="errorText">
+        รหัสผ่านไม่ถูกต้อง ลองใหม่นะ 🥺
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>
+      คะแนนความรักของเรา <br>
+      สมเจตน์ 💖
+    </h1>
+
+    <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
+
+    <div class="heart">💖</div>
+
+    <div class="score" id="score">...</div>
+
+    <div class="status" id="status">กำลังโหลดข้อมูล...</div>
+
+    <div class="tree-section">
+      <h3>ต้นไม้ความรักของเรา 🌳</h3>
+
+      <div class="tree-wrapper">
+        <div class="tree-top" id="treeTop"></div>
+        <div class="tree-trunk"></div>
+        <div class="tree-branch left"></div>
+        <div class="tree-branch right"></div>
+
+        <div class="broken-branches" id="brokenBranches"></div>
+        <div class="falling-leaves" id="fallingLeaves"></div>
+        <div class="extra-decor" id="extraDecor"></div>
+        <div class="heart-decor" id="heartDecor"></div>
+
+        <div class="tree-ground"></div>
+      </div>
+
+      <div class="tree-caption" id="treeCaption">ต้นไม้กำลังรอความรักมาเติบโตนะ 🤍</div>
+    </div>
+
+    <textarea id="reason" placeholder="ใส่เหตุผล เช่น วันนี้น่ารักมาก / ตอบช้าเลยขอหักนิดนึง..."></textarea>
+
+    <div class="buttons">
+      <button class="add" onclick="changeScore(1)">+1 คะแนน</button>
+      <button class="add" onclick="changeScore(5)">+5 คะแนน</button>
+      <button class="minus" onclick="changeScore(-1)">-1 คะแนน</button>
+      <button class="minus" onclick="changeScore(-5)">-5 คะแนน</button>
+    </div>
+
+    <div class="section-box">
+      <div class="section-title">เพิ่ม / หักคะแนนเอง</div>
+      <input type="number" id="customScore" placeholder="เช่น 20 หรือ -15" />
+      <input type="text" id="customReason" placeholder="เหตุผล เช่น ให้คะแนนพิเศษ / หักเพราะทำให้น้อยใจ" />
+      <button class="set-score-btn" onclick="setCustomScore()">บันทึกการเพิ่ม / หักคะแนน</button>
+    </div>
+
+    <button class="reset" onclick="resetData()">รีเซ็ตคะแนนและประวัติทั้งหมด</button>
+
+    <div class="history">
+      <h2>ประวัติการให้คะแนน</h2>
+      <div id="historyList" class="loading">กำลังโหลดประวัติ...</div>
+    </div>
+
+    <div class="footer-love">
+      ทุกคะแนนไม่ใช่แค่ตัวเลข<br>
+      แต่มันคือเรื่องราวเล็ก ๆ ที่ทำให้เรารักกันมากขึ้น 💖
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      onSnapshot,
+      collection,
+      addDoc,
+      query,
+      orderBy,
+      serverTimestamp,
+      getDocs,
+      deleteDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const WEBSITE_PASSWORD = "love1234";
+
+    const loginScreen = document.getElementById("loginScreen");
+    const passwordInput = document.getElementById("passwordInput");
+    const errorText = document.getElementById("errorText");
+
+    function checkLoginStatus() {
+      const isLoggedIn = sessionStorage.getItem("loveLogin");
+
+      if (isLoggedIn === "true") {
+        loginScreen.classList.add("hidden");
+      }
+    }
+
+    window.checkPassword = function() {
+      const password = passwordInput.value.trim();
+
+      if (password === WEBSITE_PASSWORD) {
+        sessionStorage.setItem("loveLogin", "true");
+        loginScreen.classList.add("hidden");
+      } else {
+        errorText.style.display = "block";
+        passwordInput.value = "";
+        passwordInput.focus();
+      }
+    };
+
+    window.checkEnter = function(event) {
+      if (event.key === "Enter") {
+        checkPassword();
+      }
+    };
+
+    window.logout = function() {
+      sessionStorage.removeItem("loveLogin");
+      location.reload();
+    };
+
+    checkLoginStatus();
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9xagrdvzVAedix69Xj2Ym2960vZZBbfE",
+      authDomain: "love-score-5ef60.firebaseapp.com",
+      projectId: "love-score-5ef60",
+      storageBucket: "love-score-5ef60.firebasestorage.app",
+      messagingSenderId: "953417297034",
+      appId: "1:953417297034:web:764b8ca9f240b3aab7d173"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const scoreRef = doc(db, "loveApp", "mainScore");
+    const historyRef = collection(db, "loveHistory");
+
+    const scoreEl = document.getElementById("score");
+    const statusEl = document.getElementById("status");
+    const reasonEl = document.getElementById("reason");
+    const customScoreEl = document.getElementById("customScore");
+    const customReasonEl = document.getElementById("customReason");
+    const historyList = document.getElementById("historyList");
+
+    const treeTopEl = document.getElementById("treeTop");
+    const brokenBranchesEl = document.getElementById("brokenBranches");
+    const fallingLeavesEl = document.getElementById("fallingLeaves");
+    const extraDecorEl = document.getElementById("extraDecor");
+    const heartDecorEl = document.getElementById("heartDecor");
+    const treeCaptionEl = document.getElementById("treeCaption");
+
+    let currentScore = 0;
+
+    async function initScore() {
+      const scoreSnap = await getDoc(scoreRef);
+
+      if (!scoreSnap.exists()) {
+        await setDoc(scoreRef, {
+          score: 0
+        });
+      }
+    }
+
+    function getStatus(score) {
+      if (score <= -100) {
+        return "หัวใจงอนหนักมาก ต้องรีบง้อด้วยความจริงใจ 🥺💔";
+      } else if (score <= -80) {
+        return "ช่วงนี้หัวใจเหนื่อย ๆ อยากได้ความใส่ใจเพิ่มอีกเยอะเลย 🤍";
+      } else if (score <= -60) {
+        return "มีเรื่องให้น้อยใจ ต้องค่อย ๆ เติมความเข้าใจกันนะ 🌧️";
+      } else if (score <= -40) {
+        return "หัวใจแอบงอน แต่ยังรอให้เธอมาทำให้อุ่นใจอยู่ 🥺";
+      } else if (score <= -20) {
+        return "ติดลบนิดหน่อย รีบเติมความน่ารักกลับมาได้เสมอ 🌷";
+      } else if (score < 0) {
+        return "ยังมีงอนบ้าง แต่รักยังรอให้ดูแลกันอยู่ 🤍";
+      } else if (score === 0) {
+        return "เริ่มต้นเติมรักให้กันใหม่อีกครั้ง 💌";
+      } else if (score <= 20) {
+        return "ความรักกำลังค่อย ๆ เบ่งบาน 🌷";
+      } else if (score <= 40) {
+        return "เริ่มมีโมเมนต์น่ารักให้ใจยิ้มแล้ว 💕";
+      } else if (score <= 60) {
+        return "หัวใจเริ่มอบอุ่นเพราะเธอมากขึ้น 🫶";
+      } else if (score <= 80) {
+        return "ความรักกำลังน่ารักแบบพอดีใจ 💖";
+      } else if (score <= 100) {
+        return "เธอทำให้หัวใจพองโตมากเลย 🥰";
+      } else if (score <= 120) {
+        return "รักเพิ่มขึ้นทุกวันแบบไม่รู้ตัว 🌙";
+      } else if (score <= 140) {
+        return "เธอคือความพิเศษของวันนี้และทุกวัน 💘";
+      } else if (score <= 160) {
+        return "คลั่งรักแบบอบอุ่น หัวใจมีแต่เธอ 💞";
+      } else if (score <= 180) {
+        return "รักนี้เริ่มล้นใจ เก็บไว้คนเดียวไม่ไหวแล้ว ✨";
+      } else if (score <= 200) {
+        return "เธอคือพื้นที่ปลอดภัยของหัวใจ 🤍";
+      } else if (score <= 220) {
+        return "รักมากจนทุกวันมีความหมายเพราะเธอ 🌹";
+      } else if (score <= 240) {
+        return "หัวใจเลือกเธอซ้ำ ๆ ในทุกวัน 💖";
+      } else if (score <= 260) {
+        return "ความรักของเรานุ่มนวลและพิเศษมาก 🥹";
+      } else if (score <= 280) {
+        return "เธอคือรอยยิ้มที่ใจอยากเก็บไว้ตลอดไป 🌷";
+      } else if (score <= 300) {
+        return "รักมากแบบไม่มีเงื่อนไขแล้วนะ 💘";
+      } else if (score <= 320) {
+        return "หัวใจเต็มไปด้วยคำว่าเธอ 💞";
+      } else if (score <= 340) {
+        return "รักเธอจนเรื่องเล็ก ๆ ก็กลายเป็นความสุข ✨";
+      } else if (score <= 360) {
+        return "เธอคือคนโปรดของหัวใจเสมอ 🫶";
+      } else if (score <= 380) {
+        return "ความรักของเราสวยงามขึ้นทุกวัน 🌙";
+      } else if (score <= 400) {
+        return "รักล้นใจ จนอยากขอบคุณที่มีเธออยู่ตรงนี้ 💖";
+      } else if (score <= 420) {
+        return "เธอคือคำตอบที่หัวใจอยากเจอทุกวัน 🌹";
+      } else if (score <= 440) {
+        return "รักนี้อบอุ่นเหมือนบ้านของหัวใจ 🤍";
+      } else if (score <= 460) {
+        return "ทุกคะแนนคือเหตุผลที่ทำให้รักเธอมากขึ้น 💕";
+      } else if (score <= 480) {
+        return "เธอทำให้โลกธรรมดากลายเป็นโลกที่น่ารัก 🥰";
+      } else if (score <= 500) {
+        return "รักมากที่สุดเท่าที่หัวใจจะเก็บไหว 💞";
+      } else {
+        return "รักที่สุดในจักรวาลของเรา ✨💖";
+      }
+    }
+
+    function cleanText(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function randomBetween(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function renderTree(score) {
+      treeTopEl.innerHTML = "";
+      brokenBranchesEl.innerHTML = "";
+      fallingLeavesEl.innerHTML = "";
+      extraDecorEl.innerHTML = "";
+      heartDecorEl.innerHTML = "";
+
+      treeTopEl.classList.remove("sad", "very-sad");
+
+      if (score < 0) {
+        const brokenCount = Math.min(Math.ceil(Math.abs(score) / 20), 6);
+        const fallingCount = Math.min(Math.ceil(Math.abs(score) / 10), 18);
+
+        if (score <= -80) {
+          treeTopEl.classList.add("very-sad");
+        } else {
+          treeTopEl.classList.add("sad");
+        }
+
+        for (let i = 0; i < brokenCount; i++) {
+          const broken = document.createElement("div");
+          broken.className = "broken-branch";
+
+          const left = randomBetween(25, 200);
+          const top = randomBetween(180, 265);
+          const rotate = randomBetween(-55, 55);
+
+          broken.style.left = `${left}px`;
+          broken.style.top = `${top}px`;
+          broken.style.transform = `rotate(${rotate}deg)`;
+
+          brokenBranchesEl.appendChild(broken);
+        }
+
+        for (let i = 0; i < fallingCount; i++) {
+          const leaf = document.createElement("div");
+          leaf.className = "falling-leaf";
+
+          const left = randomBetween(45, 220);
+          const top = randomBetween(120, 250);
+          const delay = randomBetween(0, 2.5);
+
+          leaf.style.left = `${left}px`;
+          leaf.style.top = `${top}px`;
+          leaf.style.animationDelay = `${delay}s`;
+
+          fallingLeavesEl.appendChild(leaf);
+        }
+
+        treeCaptionEl.textContent =
+          `ต้นไม้แอบเศร้านิดหน่อย มีกิ่งหัก ${brokenCount} กิ่ง และมีใบร่วง ${fallingCount} ใบ 🥺🍂`;
+
+        return;
+      }
+
+      const leafCount = Math.min(score, 100);
+
+      for (let i = 0; i < leafCount; i++) {
+        const leaf = document.createElement("div");
+        leaf.className = "leaf";
+
+        const x = randomBetween(14, 190);
+        const y = randomBetween(15, 150);
+        const rotate = randomBetween(0, 360);
+        const delay = randomBetween(0, 2);
+
+        leaf.style.left = `${x}px`;
+        leaf.style.top = `${y}px`;
+        leaf.style.transform = `rotate(${rotate}deg)`;
+        leaf.style.animationDelay = `${delay}s`;
+
+        treeTopEl.appendChild(leaf);
+      }
+
+      if (score > 100) {
+        const extraCount = Math.min(score - 100, 80);
+
+        for (let i = 0; i < extraCount; i++) {
+          const item = document.createElement("div");
+          item.className = i % 2 === 0 ? "flower" : "fruit";
+
+          const x = randomBetween(22, 178);
+          const y = randomBetween(22, 138);
+          const delay = randomBetween(0, 2);
+
+          item.style.left = `${x}px`;
+          item.style.top = `${y}px`;
+          item.style.animationDelay = `${delay}s`;
+
+          extraDecorEl.appendChild(item);
+        }
+      }
+
+      if (score > 200) {
+        const heartCount = Math.min(Math.floor((score - 200) / 20), 12);
+
+        for (let i = 0; i < heartCount; i++) {
+          const heart = document.createElement("div");
+          heart.className = "love-heart";
+          heart.textContent = "💖";
+
+          const x = randomBetween(35, 210);
+          const y = randomBetween(0, 100);
+          const delay = randomBetween(0, 2.5);
+
+          heart.style.left = `${x}px`;
+          heart.style.top = `${y}px`;
+          heart.style.animationDelay = `${delay}s`;
+
+          heartDecorEl.appendChild(heart);
+        }
+      }
+
+      if (score === 0) {
+        treeCaptionEl.textContent = "ต้นไม้กำลังรอความรักมาเติบโตนะ 🤍";
+      } else if (score <= 100) {
+        treeCaptionEl.textContent = `ตอนนี้ต้นไม้มี ${leafCount} ใบ ใบเล็ก ๆ แทนความรักของเรา 🍃`;
+      } else if (score <= 200) {
+        treeCaptionEl.textContent = "ต้นไม้มีใบเต็มต้นแล้ว และเริ่มมีดอกไม้กับผลไม้แห่งความรัก 🌸🍎";
+      } else {
+        treeCaptionEl.textContent = "ต้นไม้โตเต็มที่แล้ว มีหัวใจลอยอยู่เต็มไปหมด เพราะรักมันล้นใจ 💖🌳";
+      }
+    }
+
+    onSnapshot(scoreRef, (docSnap) => {
+      if (docSnap.exists()) {
+        currentScore = Number(docSnap.data().score) || 0;
+        scoreEl.textContent = currentScore;
+        statusEl.textContent = getStatus(currentScore);
+        renderTree(currentScore);
+      }
+    });
+
+    const q = query(historyRef, orderBy("createdAt", "desc"));
+
+    onSnapshot(q, (snapshot) => {
+      historyList.innerHTML = "";
+
+      if (snapshot.empty) {
+        historyList.innerHTML = "<p style='text-align:center;color:#999;'>ยังไม่มีประวัติ</p>";
+        return;
+      }
+
+      snapshot.forEach((docItem) => {
+        const item = docItem.data();
+        const id = docItem.id;
+
+        const dateText = item.date || "-";
+        const point = Number(item.point) || 0;
+        const reason = item.reason || "-";
+
+        const div = document.createElement("div");
+        div.className = "item";
+
+        const pointClass = point > 0 ? "plus" : "negative";
+        const pointText = point > 0 ? `+${point}` : `${point}`;
+
+        div.innerHTML = `
+          <div class="${pointClass}">
+            ${pointText} คะแนน
+          </div>
+
+          <div>เหตุผล: ${cleanText(reason)}</div>
+
+          <div class="date">${cleanText(dateText)}</div>
+
+          <div class="history-actions">
+            <button class="edit-btn">แก้ไข</button>
+            <button class="delete-btn">ลบ</button>
+          </div>
+        `;
+
+        const editButton = div.querySelector(".edit-btn");
+        const deleteButton = div.querySelector(".delete-btn");
+
+        editButton.addEventListener("click", () => {
+          editHistory(id, point, reason);
+        });
+
+        deleteButton.addEventListener("click", () => {
+          deleteHistory(id, point);
+        });
+
+        historyList.appendChild(div);
+      });
+    });
+
+    window.changeScore = async function(point) {
+      const reason = reasonEl.value.trim();
+
+      if (reason === "") {
+        alert("กรุณาใส่เหตุผลก่อนนะ");
+        return;
+      }
+
+      const newScore = currentScore + point;
+      const now = new Date();
+      const dateText = now.toLocaleString("th-TH");
+
+      await updateDoc(scoreRef, {
+        score: newScore
+      });
+
+      await addDoc(historyRef, {
+        point: point,
+        reason: reason,
+        date: dateText,
+        type: "normal",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+
+      reasonEl.value = "";
+    };
+
+    window.setCustomScore = async function() {
+      const point = Number(customScoreEl.value);
+      const customReason = customReasonEl.value.trim();
+
+      if (customScoreEl.value.trim() === "" || isNaN(point)) {
+        alert("กรุณากรอกคะแนนเป็นตัวเลข เช่น 20 หรือ -15");
+        return;
+      }
+
+      if (point === 0) {
+        alert("กรุณากรอกคะแนนที่ไม่ใช่ 0");
+        return;
+      }
+
+      if (customReason === "") {
+        alert("กรุณาใส่เหตุผลก่อนนะ");
+        return;
+      }
+
+      const newScore = currentScore + point;
+
+      const confirmSet = confirm(
+        `ต้องการ ${point > 0 ? "เพิ่ม" : "หัก"} ${Math.abs(point)} คะแนน ใช่ไหม?\n\n` +
+        `คะแนนปัจจุบัน: ${currentScore}\n` +
+        `คะแนนหลังบันทึก: ${newScore}`
+      );
+
+      if (!confirmSet) return;
+
+      const now = new Date();
+      const dateText = now.toLocaleString("th-TH");
+
+      await updateDoc(scoreRef, {
+        score: newScore
+      });
+
+      await addDoc(historyRef, {
+        point: point,
+        reason: customReason,
+        date: dateText,
+        type: "custom_point",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+
+      customScoreEl.value = "";
+      customReasonEl.value = "";
+    };
+
+    window.editHistory = async function(id, oldPoint, oldReason) {
+      const newPointText = prompt("แก้ไขคะแนน เช่น 5 หรือ -5", oldPoint);
+
+      if (newPointText === null) return;
+
+      const newPoint = Number(newPointText);
+
+      if (isNaN(newPoint)) {
+        alert("กรุณากรอกคะแนนเป็นตัวเลข");
+        return;
+      }
+
+      const newReason = prompt("แก้ไขเหตุผล", oldReason);
+
+      if (newReason === null) return;
+
+      if (newReason.trim() === "") {
+        alert("กรุณาใส่เหตุผล");
+        return;
+      }
+
+      const pointDiff = newPoint - oldPoint;
+      const newTotalScore = currentScore + pointDiff;
+
+      const confirmEdit = confirm(
+        `ต้องการแก้ไขรายการนี้ใช่ไหม?\n\n` +
+        `คะแนนเดิม: ${oldPoint}\n` +
+        `คะแนนใหม่: ${newPoint}\n` +
+        `คะแนนรวมจะเปลี่ยนเป็น: ${newTotalScore}`
+      );
+
+      if (!confirmEdit) return;
+
+      const historyDocRef = doc(db, "loveHistory", id);
+
+      await updateDoc(historyDocRef, {
+        point: newPoint,
+        reason: newReason.trim(),
+        updatedAt: serverTimestamp()
+      });
+
+      await updateDoc(scoreRef, {
+        score: newTotalScore
+      });
+    };
+
+    window.deleteHistory = async function(id, point) {
+      const newTotalScore = currentScore - point;
+
+      const confirmDelete = confirm(
+        `ต้องการลบประวัตินี้ใช่ไหม?\n\n` +
+        `คะแนนของรายการนี้: ${point}\n` +
+        `คะแนนรวมจะเปลี่ยนเป็น: ${newTotalScore}`
+      );
+
+      if (!confirmDelete) return;
+
+      const historyDocRef = doc(db, "loveHistory", id);
+
+      await deleteDoc(historyDocRef);
+
+      await updateDoc(scoreRef, {
+        score: newTotalScore
+      });
+    };
+
+    window.resetData = async function() {
+      const confirmReset = confirm("แน่ใจไหมว่าจะรีเซ็ตคะแนนและประวัติทั้งหมด?");
+
+      if (!confirmReset) return;
+
+      await setDoc(scoreRef, {
+        score: 0
+      });
+
+      const allHistory = await getDocs(historyRef);
+
+      const deletePromises = [];
+
+      allHistory.forEach((docItem) => {
+        deletePromises.push(deleteDoc(doc(db, "loveHistory", docItem.id)));
+      });
+
+      await Promise.all(deletePromises);
+    };
+
+    initScore();
+  </script>
+</body>
+</html>
