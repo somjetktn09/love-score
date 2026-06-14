@@ -433,7 +433,7 @@
 
       if (!scoreSnap.exists()) {
         await setDoc(scoreRef, {
-          score: 100
+          score: 0
         });
       }
     }
@@ -670,7 +670,7 @@
       if (!confirmReset) return;
 
       await setDoc(scoreRef, {
-        score: 100
+        score: 0
       });
 
       const allHistory = await getDocs(historyRef);
