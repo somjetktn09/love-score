@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>คะแนนความรักของเรา</title>
+  <title>คะแนนความรักของเรา - สมเจตน์</title>
 
   <style>
     * {
@@ -240,23 +240,26 @@
       transform: translateX(-50%);
       width: 220px;
       height: 190px;
-      background: #d9f7be;
+      background: radial-gradient(circle at 45% 35%, #eaffd6, #c8f7a5 55%, #a5df76);
       border-radius: 50%;
       overflow: hidden;
       border: 4px solid #b7eb8f;
+      box-shadow:
+        inset 0 8px 20px rgba(255, 255, 255, 0.45),
+        0 10px 20px rgba(82, 196, 26, 0.18);
       transition: background 0.4s ease, border-color 0.4s ease, opacity 0.4s ease;
     }
 
     .tree-top.sad {
-      background: #e6e6e6;
+      background: radial-gradient(circle at 45% 35%, #f1f1f1, #dedede 55%, #c7c7c7);
       border-color: #c9c9c9;
-      opacity: 0.85;
+      opacity: 0.88;
     }
 
     .tree-top.very-sad {
-      background: #d0d0d0;
+      background: radial-gradient(circle at 45% 35%, #e0e0e0, #c9c9c9 55%, #adadad);
       border-color: #aaaaaa;
-      opacity: 0.75;
+      opacity: 0.78;
     }
 
     .tree-trunk {
@@ -266,8 +269,9 @@
       transform: translateX(-50%);
       width: 42px;
       height: 115px;
-      background: #8b5a3c;
+      background: linear-gradient(90deg, #7b4a2f, #9a6748, #6e3f28);
       border-radius: 14px;
+      box-shadow: inset 5px 0 8px rgba(255, 255, 255, 0.15);
     }
 
     .tree-branch {
@@ -298,58 +302,133 @@
       height: 30px;
       background: #b7eb8f;
       border-radius: 50%;
+      box-shadow: 0 8px 14px rgba(82, 196, 26, 0.15);
     }
 
     .leaf {
       position: absolute;
-      width: 16px;
-      height: 16px;
-      background: #52c41a;
-      border-radius: 50% 50% 50% 0;
+      width: 18px;
+      height: 24px;
+      background: linear-gradient(135deg, #8ee86f, #36b24a);
+      border-radius: 80% 0 80% 0;
       opacity: 0.95;
-      animation: leafWiggle 2.5s infinite ease-in-out;
+      box-shadow:
+        0 3px 6px rgba(54, 178, 74, 0.25),
+        inset 2px 2px 4px rgba(255, 255, 255, 0.45);
+      animation: leafWiggle 2.8s infinite ease-in-out;
+    }
+
+    .leaf::after {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: 18px;
+      background: rgba(255, 255, 255, 0.65);
+      left: 8px;
+      top: 3px;
+      border-radius: 10px;
+      transform: rotate(-18deg);
+    }
+
+    .leaf:nth-child(3n) {
+      background: linear-gradient(135deg, #b8f28b, #52c41a);
+    }
+
+    .leaf:nth-child(4n) {
+      background: linear-gradient(135deg, #7ee081, #2fa84f);
+    }
+
+    .leaf:nth-child(5n) {
+      width: 15px;
+      height: 21px;
+      opacity: 0.9;
     }
 
     @keyframes leafWiggle {
       0%, 100% {
-        transform: rotate(-20deg) translateY(0);
+        transform: rotate(-15deg) translateY(0);
       }
 
       50% {
-        transform: rotate(10deg) translateY(-2px);
+        transform: rotate(12deg) translateY(-3px);
       }
     }
 
     .flower {
       position: absolute;
-      width: 18px;
-      height: 18px;
-      background: #ff85c0;
+      width: 12px;
+      height: 12px;
+      background: #ffd666;
       border-radius: 50%;
       box-shadow:
-        -10px 0 0 #ffadd2,
-        10px 0 0 #ffadd2,
-        0 -10px 0 #ffadd2,
-        0 10px 0 #ffadd2;
-      animation: popCute 1.8s infinite ease-in-out;
+        -9px 0 0 #ff9acb,
+        9px 0 0 #ff9acb,
+        0 -9px 0 #ffb3d9,
+        0 9px 0 #ffb3d9,
+        0 3px 7px rgba(255, 105, 180, 0.25);
+      animation: flowerBloom 2s infinite ease-in-out;
+    }
+
+    @keyframes flowerBloom {
+      0%, 100% {
+        transform: scale(1) rotate(0deg);
+      }
+
+      50% {
+        transform: scale(1.15) rotate(8deg);
+      }
     }
 
     .fruit {
       position: absolute;
-      width: 16px;
-      height: 16px;
-      background: #ff7875;
-      border-radius: 50%;
-      animation: popCute 2s infinite ease-in-out;
+      width: 18px;
+      height: 20px;
+      border-radius: 50% 50% 55% 55%;
+      box-shadow:
+        0 4px 8px rgba(224, 49, 49, 0.25),
+        inset 2px 2px 5px rgba(255, 255, 255, 0.45);
+      animation: fruitBounce 2.2s infinite ease-in-out;
     }
 
-    @keyframes popCute {
+    .fruit.apple {
+      background: radial-gradient(circle at 35% 30%, #ffd1d1, #ff6b6b 45%, #e03131 100%);
+    }
+
+    .fruit.peach {
+      background: radial-gradient(circle at 35% 30%, #ffe0b2, #ff9f43 45%, #f76707 100%);
+    }
+
+    .fruit::before {
+      content: "";
+      position: absolute;
+      width: 5px;
+      height: 8px;
+      background: #7a4b2b;
+      top: -6px;
+      left: 7px;
+      border-radius: 5px;
+      transform: rotate(15deg);
+    }
+
+    .fruit::after {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 6px;
+      background: #52c41a;
+      top: -5px;
+      left: 11px;
+      border-radius: 80% 0 80% 0;
+      transform: rotate(25deg);
+    }
+
+    @keyframes fruitBounce {
       0%, 100% {
-        transform: scale(1);
+        transform: translateY(0) scale(1);
       }
 
       50% {
-        transform: scale(1.12);
+        transform: translateY(-3px) scale(1.08);
       }
     }
 
@@ -357,6 +436,7 @@
       position: absolute;
       font-size: 20px;
       animation: heartFloat 2.8s infinite ease-in-out;
+      filter: drop-shadow(0 3px 5px rgba(255, 79, 154, 0.25));
     }
 
     @keyframes heartFloat {
@@ -394,11 +474,12 @@
     .falling-leaf {
       position: absolute;
       width: 15px;
-      height: 15px;
-      background: #c8a45d;
-      border-radius: 50% 50% 50% 0;
+      height: 20px;
+      background: linear-gradient(135deg, #d9b56f, #b8893d);
+      border-radius: 80% 0 80% 0;
       opacity: 0.85;
       animation: leafFall 3s infinite ease-in-out;
+      box-shadow: 0 3px 5px rgba(184, 137, 61, 0.2);
     }
 
     @keyframes leafFall {
@@ -523,7 +604,8 @@
 
   <div class="container">
     <h1>
-      คะแนนความรักของเรา
+      คะแนนความรักของเรา <br>
+      สมเจตน์ 💖
     </h1>
 
     <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
@@ -845,7 +927,14 @@
 
         for (let i = 0; i < extraCount; i++) {
           const item = document.createElement("div");
-          item.className = i % 2 === 0 ? "flower" : "fruit";
+
+          if (i % 3 === 0) {
+            item.className = "flower";
+          } else if (i % 3 === 1) {
+            item.className = "fruit apple";
+          } else {
+            item.className = "fruit peach";
+          }
 
           const x = randomBetween(22, 178);
           const y = randomBetween(22, 138);
