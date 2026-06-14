@@ -93,7 +93,7 @@
       line-height: 1.4;
     }
 
-    .heart {
+    .main-heart {
       font-size: 60px;
       animation: beat 1s infinite;
     }
@@ -160,6 +160,15 @@
       opacity: 0.9;
     }
 
+    .logout-btn {
+      background: #ffe4f1;
+      color: #5a1f3d;
+      width: auto;
+      padding: 8px 14px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+
     .buttons {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -190,15 +199,6 @@
       width: 100%;
     }
 
-    .logout-btn {
-      background: #ffe4f1;
-      color: #5a1f3d;
-      width: auto;
-      padding: 8px 14px;
-      margin-bottom: 15px;
-      font-size: 13px;
-    }
-
     .section-box {
       margin-top: 18px;
       padding: 15px;
@@ -211,6 +211,133 @@
       color: #ff4f9a;
       margin-bottom: 10px;
       text-align: left;
+    }
+
+    .view-toggle-box {
+      margin: 15px 0 20px;
+      padding: 12px;
+      background: #fff5fa;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: #b94d7c;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 58px;
+      height: 30px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      margin: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: #ffb6d5;
+      transition: 0.3s;
+      border-radius: 30px;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.12);
+    }
+
+    .slider::before {
+      position: absolute;
+      content: "💖";
+      height: 24px;
+      width: 24px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      transition: 0.3s;
+      border-radius: 50%;
+      font-size: 14px;
+      line-height: 24px;
+      text-align: center;
+      box-shadow: 0 3px 8px rgba(255, 105, 180, 0.3);
+    }
+
+    .switch input:checked + .slider {
+      background: #b7eb8f;
+    }
+
+    .switch input:checked + .slider::before {
+      transform: translateX(28px);
+      content: "🌳";
+    }
+
+    .heart-section {
+      margin: 22px 0;
+      padding: 18px;
+      background: #fff5fa;
+      border-radius: 20px;
+    }
+
+    .heart-section h3 {
+      margin-top: 0;
+      color: #ff4f9a;
+      margin-bottom: 15px;
+    }
+
+    .heart-visual {
+      min-height: 190px;
+      padding: 15px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #ffe4f1, #fff8fb);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-content: center;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .love-dot-heart {
+      font-size: 18px;
+      animation: heartPop 2s infinite ease-in-out;
+      filter: drop-shadow(0 3px 4px rgba(255, 79, 154, 0.25));
+    }
+
+    @keyframes heartPop {
+      0%, 100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.18);
+      }
+    }
+
+    .big-love-heart {
+      font-size: 32px;
+      animation: bigHeartFloat 2.6s infinite ease-in-out;
+    }
+
+    @keyframes bigHeartFloat {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+
+      50% {
+        transform: translateY(-5px) scale(1.15);
+      }
+    }
+
+    .heart-caption {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #b94d7c;
+      line-height: 1.6;
     }
 
     .tree-section {
@@ -610,13 +737,34 @@
 
     <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
 
-    <div class="heart">💖</div>
+    <div class="main-heart">💖</div>
 
     <div class="score" id="score">...</div>
 
     <div class="status" id="status">กำลังโหลดข้อมูล...</div>
 
-    <div class="tree-section">
+    <div class="view-toggle-box">
+      <span>💖 หัวใจ</span>
+
+      <label class="switch">
+        <input type="checkbox" id="viewModeToggle" onchange="toggleViewMode()">
+        <span class="slider"></span>
+      </label>
+
+      <span>🌳 ต้นไม้</span>
+    </div>
+
+    <div class="heart-section" id="heartSection">
+      <h3>หัวใจความรักของเรา 💖</h3>
+
+      <div class="heart-visual" id="heartVisual"></div>
+
+      <div class="heart-caption" id="heartCaption">
+        หัวใจกำลังรอให้เธอมาเติมความรักนะ 🤍
+      </div>
+    </div>
+
+    <div class="tree-section" id="treeSection">
       <h3>ต้นไม้ความรักของเรา 🌳</h3>
 
       <div class="tree-wrapper">
@@ -746,6 +894,12 @@
     const customReasonEl = document.getElementById("customReason");
     const historyList = document.getElementById("historyList");
 
+    const viewModeToggleEl = document.getElementById("viewModeToggle");
+    const heartSectionEl = document.getElementById("heartSection");
+    const treeSectionEl = document.getElementById("treeSection");
+    const heartVisualEl = document.getElementById("heartVisual");
+    const heartCaptionEl = document.getElementById("heartCaption");
+
     const treeTopEl = document.getElementById("treeTop");
     const brokenBranchesEl = document.getElementById("brokenBranches");
     const fallingLeavesEl = document.getElementById("fallingLeaves");
@@ -846,6 +1000,59 @@
 
     function randomBetween(min, max) {
       return Math.random() * (max - min) + min;
+    }
+
+    function renderHeart(score) {
+      heartVisualEl.innerHTML = "";
+
+      if (score < 0) {
+        const brokenHeartCount = Math.min(Math.ceil(Math.abs(score) / 10), 30);
+
+        for (let i = 0; i < brokenHeartCount; i++) {
+          const heart = document.createElement("div");
+          heart.className = "love-dot-heart";
+          heart.textContent = "💔";
+          heart.style.animationDelay = `${randomBetween(0, 2)}s`;
+          heartVisualEl.appendChild(heart);
+        }
+
+        heartCaptionEl.textContent = "หัวใจแอบน้อยใจนิดหน่อย แต่ยังรอให้เธอมาเติมรักอยู่นะ 🥺";
+        return;
+      }
+
+      if (score === 0) {
+        heartVisualEl.innerHTML = `<div class="big-love-heart">🤍</div>`;
+        heartCaptionEl.textContent = "หัวใจดวงนี้กำลังรอเรื่องราวน่ารัก ๆ ของเราอยู่ 🤍";
+        return;
+      }
+
+      const smallHeartCount = Math.min(score, 100);
+
+      for (let i = 0; i < smallHeartCount; i++) {
+        const heart = document.createElement("div");
+        heart.className = "love-dot-heart";
+        heart.textContent = i % 5 === 0 ? "💕" : "💖";
+        heart.style.animationDelay = `${randomBetween(0, 2)}s`;
+        heartVisualEl.appendChild(heart);
+      }
+
+      if (score > 100) {
+        const extraHeartCount = Math.min(Math.floor((score - 100) / 10), 20);
+
+        for (let i = 0; i < extraHeartCount; i++) {
+          const heart = document.createElement("div");
+          heart.className = "big-love-heart";
+          heart.textContent = "💘";
+          heart.style.animationDelay = `${randomBetween(0, 2)}s`;
+          heartVisualEl.appendChild(heart);
+        }
+      }
+
+      if (score <= 100) {
+        heartCaptionEl.textContent = `ตอนนี้หัวใจมีความรัก ${smallHeartCount} ดวงเล็ก ๆ เต็มไปด้วยความน่ารัก 💖`;
+      } else {
+        heartCaptionEl.textContent = "หัวใจเริ่มล้นแล้ว มีทั้งความรัก ความคิดถึง และความพิเศษเต็มไปหมด 💘";
+      }
     }
 
     function renderTree(score) {
@@ -979,12 +1186,39 @@
       }
     }
 
+    function applyViewMode() {
+      const mode = localStorage.getItem("loveViewMode") || "tree";
+
+      if (mode === "tree") {
+        viewModeToggleEl.checked = true;
+        treeSectionEl.style.display = "block";
+        heartSectionEl.style.display = "none";
+      } else {
+        viewModeToggleEl.checked = false;
+        treeSectionEl.style.display = "none";
+        heartSectionEl.style.display = "block";
+      }
+    }
+
+    window.toggleViewMode = function() {
+      const mode = viewModeToggleEl.checked ? "tree" : "heart";
+
+      localStorage.setItem("loveViewMode", mode);
+
+      applyViewMode();
+      renderHeart(currentScore);
+      renderTree(currentScore);
+    };
+
     onSnapshot(scoreRef, (docSnap) => {
       if (docSnap.exists()) {
         currentScore = Number(docSnap.data().score) || 0;
         scoreEl.textContent = currentScore;
         statusEl.textContent = getStatus(currentScore);
+
+        renderHeart(currentScore);
         renderTree(currentScore);
+        applyViewMode();
       }
     });
 
@@ -1206,6 +1440,7 @@
     };
 
     initScore();
+    applyViewMode();
   </script>
 </body>
 </html>
