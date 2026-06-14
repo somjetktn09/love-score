@@ -125,6 +125,7 @@
       border-radius: 15px;
       margin-bottom: 20px;
       font-weight: bold;
+      line-height: 1.5;
     }
 
     textarea,
@@ -359,7 +360,7 @@
 
     // ==============================
     // ตั้งค่ารหัสผ่านเข้าเว็บ
-    // แก้รหัสผ่านตรงนี้ได้เลย
+    // เปลี่ยนรหัสตรงนี้ได้เลย
     // ==============================
     const WEBSITE_PASSWORD = "love1234";
 
@@ -439,14 +440,24 @@
     }
 
     function getStatus(score) {
-      if (score < 50) {
-        return "ต้องง้อด่วนมาก 🥺";
-      } else if (score < 100) {
-        return "ยังรักอยู่ แต่ต้องปรับปรุง 💛";
-      } else if (score < 150) {
-        return "รักดีมาก 💖";
+      if (score <= 0) {
+        return "เริ่มต้นเติมรักให้กันวันแรก 🤍";
+      } else if (score <= 20) {
+        return "ความรักกำลังค่อย ๆ เบ่งบาน 🌷";
+      } else if (score <= 50) {
+        return "เริ่มมีโมเมนต์น่ารักเต็มหัวใจ 💕";
+      } else if (score <= 100) {
+        return "หัวใจเริ่มพองโตเพราะเธอ 💖";
+      } else if (score <= 150) {
+        return "รักมากขึ้นทุกวันแบบไม่รู้ตัว 🥰";
+      } else if (score <= 200) {
+        return "เธอคือความสุขพิเศษของใจ 🌙";
+      } else if (score <= 300) {
+        return "ระดับคลั่งรักแบบอบอุ่นมาก 💘";
+      } else if (score <= 500) {
+        return "รักล้นใจ เก็บไว้ไม่ไหวแล้ว 💞";
       } else {
-        return "แฟนดีเด่นแห่งปี 🏆";
+        return "รักที่สุดในจักรวาลของเรา ✨💖";
       }
     }
 
