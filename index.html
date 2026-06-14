@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>คะแนนความรักของเรา - สมเจตน์</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: "Prompt", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffd6e8, #fff0f6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #5a1f3d;
+    }
+
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #ffd6e8, #fff0f6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      padding: 20px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 380px;
+      background: white;
+      border-radius: 25px;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 15px 40px rgba(255, 105, 180, 0.25);
+    }
+
+    .login-box h2 {
+      color: #ff4f9a;
+      margin-top: 0;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 13px;
+      border-radius: 15px;
+      border: 2px solid #ffc2dd;
+      outline: none;
+      font-size: 16px;
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .login-box input:focus {
+      border-color: #ff5ca8;
+    }
+
+    .login-box button {
+      width: 100%;
+      background: #ff69b4;
+      color: white;
+    }
+
+    .error-text {
+      color: #d6336c;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 460px;
+      background: white;
+      border-radius: 25px;
+      padding: 25px;
+      box-shadow: 0 15px 40px rgba(255, 105, 180, 0.25);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #ff4f9a;
+      line-height: 1.4;
+    }
+
+    .heart {
+      font-size: 60px;
+      animation: beat 1s infinite;
+    }
+
+    @keyframes beat {
+      0%, 100% { 
+        transform: scale(1); 
+      }
+
+      50% { 
+        transform: scale(1.15); 
+      }
+    }
+
+    .score {
+      font-size: 48px;
+      font-weight: bold;
+      color: #ff2f86;
+      margin: 10px 0;
+    }
+
+    .status {
+      background: #ffe4f1;
+      padding: 10px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    textarea,
+    input {
+      width: 100%;
+      border: 2px solid #ffc2dd;
+      border-radius: 15px;
+      padding: 12px;
+      outline: none;
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+
+    textarea {
+      height: 80px;
+      resize: none;
+    }
+
+    textarea:focus,
+    input:focus {
+      border-color: #ff5ca8;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      border: none;
+      padding: 12px;
+      border-radius: 15px;
+      font-size: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.9;
+    }
+
+    .add {
+      background: #ff69b4;
+      color: white;
+    }
+
+    .minus {
+      background: #8e44ad;
+      color: white;
+    }
+
+    .set-score-btn {
+      background: #ffb6d5;
+      color: #5a1f3d;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .reset {
+      background: #f1f1f1;
+      color: #555;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .logout-btn {
+      background: #ffe4f1;
+      color: #5a1f3d;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .section-box {
+      margin-top: 18px;
+      padding: 15px;
+      background: #fff5fa;
+      border-radius: 18px;
+    }
+
+    .section-title {
+      font-weight: bold;
+      color: #ff4f9a;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    .history {
+      margin-top: 25px;
+      text-align: left;
+    }
+
+    .history h2 {
+      font-size: 20px;
+      color: #ff4f9a;
+    }
+
+    .item {
+      background: #fff5fa;
+      border-left: 5px solid #ff69b4;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .plus {
+      color: #ff2f86;
+      font-weight: bold;
+    }
+
+    .negative {
+      color: #8e44ad;
+      font-weight: bold;
+    }
+
+    .date {
+      color: #999;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .history-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .edit-btn {
+      background: #ffd1e6;
+      color: #5a1f3d;
+      flex: 1;
+      padding: 8px;
+      font-size: 13px;
+    }
+
+    .delete-btn {
+      background: #eeeeee;
+      color: #555;
+      flex: 1;
+      padding: 8px;
+      font-size: 13px;
+    }
+
+    .loading {
+      color: #999;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <h2>เข้าสู่พื้นที่ความรัก 💖</h2>
+      <p>กรอกรหัสผ่านก่อนเข้าเว็บไซต์</p>
+
+      <input 
+        type="password" 
+        id="passwordInput" 
+        placeholder="กรอกรหัสผ่าน"
+        onkeydown="checkEnter(event)"
+      >
+
+      <button onclick="checkPassword()">เข้าสู่เว็บไซต์</button>
+
+      <div class="error-text" id="errorText">
+        รหัสผ่านไม่ถูกต้อง ลองใหม่นะ 🥺
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>
+      คะแนนความรักของเรา <br>
+      สมเจตน์ 💖
+    </h1>
+
+    <button class="logout-btn" onclick="logout()">ออกจากระบบ</button>
+
+    <div class="heart">💖</div>
+
+    <div class="score" id="score">...</div>
+
+    <div class="status" id="status">กำลังโหลดข้อมูล...</div>
+
+    <textarea id="reason" placeholder="ใส่เหตุผล เช่น วันนี้พูดน่ารักมาก..."></textarea>
+
+    <div class="buttons">
+      <button class="add" onclick="changeScore(1)">+1 คะแนน</button>
+      <button class="add" onclick="changeScore(5)">+5 คะแนน</button>
+      <button class="minus" onclick="changeScore(-1)">-1 คะแนน</button>
+      <button class="minus" onclick="changeScore(-5)">-5 คะแนน</button>
+    </div>
+
+    <div class="section-box">
+      <div class="section-title">กำหนดคะแนนเอง</div>
+      <input type="number" id="customScore" placeholder="เช่น 150" />
+      <button class="set-score-btn" onclick="setCustomScore()">บันทึกคะแนนใหม่</button>
+    </div>
+
+    <button class="reset" onclick="resetData()">รีเซ็ตคะแนนและประวัติทั้งหมด</button>
+
+    <div class="history">
+      <h2>ประวัติการให้คะแนน</h2>
+      <div id="historyList" class="loading">กำลังโหลดประวัติ...</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      onSnapshot,
+      collection,
+      addDoc,
+      query,
+      orderBy,
+      serverTimestamp,
+      getDocs,
+      deleteDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    // ==============================
+    // ตั้งค่ารหัสผ่านเข้าเว็บ
+    // ==============================
+    const WEBSITE_PASSWORD = "love1234";
+
+    const loginScreen = document.getElementById("loginScreen");
+    const passwordInput = document.getElementById("passwordInput");
+    const errorText = document.getElementById("errorText");
+
+    function checkLoginStatus() {
+      const isLoggedIn = sessionStorage.getItem("loveLogin");
+
+      if (isLoggedIn === "true") {
+        loginScreen.classList.add("hidden");
+      }
+    }
+
+    window.checkPassword = function() {
+      const password = passwordInput.value.trim();
+
+      if (password === WEBSITE_PASSWORD) {
+        sessionStorage.setItem("loveLogin", "true");
+        loginScreen.classList.add("hidden");
+      } else {
+        errorText.style.display = "block";
+        passwordInput.value = "";
+        passwordInput.focus();
+      }
+    };
+
+    window.checkEnter = function(event) {
+      if (event.key === "Enter") {
+        checkPassword();
+      }
+    };
+
+    window.logout = function() {
+      sessionStorage.removeItem("loveLogin");
+      location.reload();
+    };
+
+    checkLoginStatus();
+
+    // ==============================
+    // ตั้งค่า Firebase
+    // เอา firebaseConfig ของตัวเองมาใส่ตรงนี้
+    // ==============================
+    const firebaseConfig = {
+      apiKey: "AIzaSyA9xagrdvzVAedix69Xj2Ym2960vZZBbfE",
+  authDomain: "love-score-5ef60.firebaseapp.com",
+  projectId: "love-score-5ef60",
+  storageBucket: "love-score-5ef60.firebasestorage.app",
+  messagingSenderId: "953417297034",
+  appId: "1:953417297034:web:764b8ca9f240b3aab7d173"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const scoreRef = doc(db, "loveApp", "mainScore");
+    const historyRef = collection(db, "loveHistory");
+
+    const scoreEl = document.getElementById("score");
+    const statusEl = document.getElementById("status");
+    const reasonEl = document.getElementById("reason");
+    const customScoreEl = document.getElementById("customScore");
+    const historyList = document.getElementById("historyList");
+
+    let currentScore = 100;
+
+    async function initScore() {
+      const scoreSnap = await getDoc(scoreRef);
+
+      if (!scoreSnap.exists()) {
+        await setDoc(scoreRef, {
+          score: 100
+        });
+      }
+    }
+
+    function getStatus(score) {
+      if (score < 50) {
+        return "ต้องง้อด่วนมาก 🥺";
+      } else if (score < 100) {
+        return "ยังรักอยู่ แต่ต้องปรับปรุง 💛";
+      } else if (score < 150) {
+        return "รักดีมาก 💖";
+      } else {
+        return "แฟนดีเด่นแห่งปี 🏆";
+      }
+    }
+
+    function cleanText(text) {
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    onSnapshot(scoreRef, (docSnap) => {
+      if (docSnap.exists()) {
+        currentScore = Number(docSnap.data().score) || 0;
+        scoreEl.textContent = currentScore;
+        statusEl.textContent = getStatus(currentScore);
+      }
+    });
+
+    const q = query(historyRef, orderBy("createdAt", "desc"));
+
+    onSnapshot(q, (snapshot) => {
+      historyList.innerHTML = "";
+
+      if (snapshot.empty) {
+        historyList.innerHTML = "<p style='text-align:center;color:#999;'>ยังไม่มีประวัติ</p>";
+        return;
+      }
+
+      snapshot.forEach((docItem) => {
+        const item = docItem.data();
+        const id = docItem.id;
+
+        const dateText = item.date || "-";
+        const point = Number(item.point) || 0;
+        const reason = item.reason || "-";
+
+        const div = document.createElement("div");
+        div.className = "item";
+
+        const pointClass = point > 0 ? "plus" : "negative";
+        const pointText = point > 0 ? `+${point}` : `${point}`;
+
+        div.innerHTML = `
+          <div class="${pointClass}">
+            ${pointText} คะแนน
+          </div>
+
+          <div>เหตุผล: ${cleanText(reason)}</div>
+
+          <div class="date">${cleanText(dateText)}</div>
+
+          <div class="history-actions">
+            <button class="edit-btn">แก้ไข</button>
+            <button class="delete-btn">ลบ</button>
+          </div>
+        `;
+
+        const editButton = div.querySelector(".edit-btn");
+        const deleteButton = div.querySelector(".delete-btn");
+
+        editButton.addEventListener("click", () => {
+          editHistory(id, point, reason);
+        });
+
+        deleteButton.addEventListener("click", () => {
+          deleteHistory(id, point);
+        });
+
+        historyList.appendChild(div);
+      });
+    });
+
+    window.changeScore = async function(point) {
+      const reason = reasonEl.value.trim();
+
+      if (reason === "") {
+        alert("กรุณาใส่เหตุผลก่อนนะ");
+        return;
+      }
+
+      const newScore = currentScore + point;
+      const now = new Date();
+      const dateText = now.toLocaleString("th-TH");
+
+      await updateDoc(scoreRef, {
+        score: newScore
+      });
+
+      await addDoc(historyRef, {
+        point: point,
+        reason: reason,
+        date: dateText,
+        type: "normal",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+
+      reasonEl.value = "";
+    };
+
+    window.setCustomScore = async function() {
+      const newScore = Number(customScoreEl.value);
+
+      if (customScoreEl.value.trim() === "" || isNaN(newScore)) {
+        alert("กรุณากรอกคะแนนเป็นตัวเลข");
+        return;
+      }
+
+      const oldScore = currentScore;
+      const diff = newScore - oldScore;
+
+      const confirmSet = confirm(`ต้องการเปลี่ยนคะแนนจาก ${oldScore} เป็น ${newScore} ใช่ไหม?`);
+
+      if (!confirmSet) return;
+
+      const now = new Date();
+      const dateText = now.toLocaleString("th-TH");
+
+      await updateDoc(scoreRef, {
+        score: newScore
+      });
+
+      await addDoc(historyRef, {
+        point: diff,
+        reason: `กำหนดคะแนนเองจาก ${oldScore} เป็น ${newScore}`,
+        date: dateText,
+        type: "set_score",
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+
+      customScoreEl.value = "";
+    };
+
+    window.editHistory = async function(id, oldPoint, oldReason) {
+      const newPointText = prompt("แก้ไขคะแนน เช่น 5 หรือ -5", oldPoint);
+
+      if (newPointText === null) return;
+
+      const newPoint = Number(newPointText);
+
+      if (isNaN(newPoint)) {
+        alert("กรุณากรอกคะแนนเป็นตัวเลข");
+        return;
+      }
+
+      const newReason = prompt("แก้ไขเหตุผล", oldReason);
+
+      if (newReason === null) return;
+
+      if (newReason.trim() === "") {
+        alert("กรุณาใส่เหตุผล");
+        return;
+      }
+
+      const pointDiff = newPoint - oldPoint;
+      const newTotalScore = currentScore + pointDiff;
+
+      const confirmEdit = confirm(
+        `ต้องการแก้ไขรายการนี้ใช่ไหม?\n\n` +
+        `คะแนนเดิม: ${oldPoint}\n` +
+        `คะแนนใหม่: ${newPoint}\n` +
+        `คะแนนรวมจะเปลี่ยนเป็น: ${newTotalScore}`
+      );
+
+      if (!confirmEdit) return;
+
+      const historyDocRef = doc(db, "loveHistory", id);
+
+      await updateDoc(historyDocRef, {
+        point: newPoint,
+        reason: newReason.trim(),
+        updatedAt: serverTimestamp()
+      });
+
+      await updateDoc(scoreRef, {
+        score: newTotalScore
+      });
+    };
+
+    window.deleteHistory = async function(id, point) {
+      const newTotalScore = currentScore - point;
+
+      const confirmDelete = confirm(
+        `ต้องการลบประวัตินี้ใช่ไหม?\n\n` +
+        `คะแนนของรายการนี้: ${point}\n` +
+        `คะแนนรวมจะเปลี่ยนเป็น: ${newTotalScore}`
+      );
+
+      if (!confirmDelete) return;
+
+      const historyDocRef = doc(db, "loveHistory", id);
+
+      await deleteDoc(historyDocRef);
+
+      await updateDoc(scoreRef, {
+        score: newTotalScore
+      });
+    };
+
+    window.resetData = async function() {
+      const confirmReset = confirm("แน่ใจไหมว่าจะรีเซ็ตคะแนนและประวัติทั้งหมด?");
+
+      if (!confirmReset) return;
+
+      await setDoc(scoreRef, {
+        score: 100
+      });
+
+      const allHistory = await getDocs(historyRef);
+
+      const deletePromises = [];
+
+      allHistory.forEach((docItem) => {
+        deletePromises.push(deleteDoc(doc(db, "loveHistory", docItem.id)));
+      });
+
+      await Promise.all(deletePromises);
+    };
+
+    initScore();
+  </script>
+</body>
+</html>
